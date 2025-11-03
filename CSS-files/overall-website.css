@@ -6,7 +6,7 @@ body {
 
 .hero {
     background: linear-gradient(rgba(247, 241, 222, 0.7), rgba(247, 241, 222, 0.7)),
-                url('../Images/hero-Image.jpeg') center/cover no-repeat;
+                url('Images/hero-Image.jpeg') center/cover no-repeat;
     height: 90vh;
     display: flex;
     align-items: center;
