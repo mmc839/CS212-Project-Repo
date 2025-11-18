@@ -50,3 +50,27 @@ body {
     padding: 0.7rem 1.5rem;
     font-weight: 600;
 }
+
+/* About Page Hero Section */
+.about-hero {
+    background-color: #C4A484; /* soft tan based on palette */
+    height: 45vh;
+    color: #F7F1DE;
+}
+
+/* About page content card */
+.about-card {
+    background-color: #F7F1DE; /* keep consistent with site background */
+    border-radius: 12px;
+    line-height: 1.7;
+}
+
+/* Optional subtle links styling in About page */
+.about-card a {
+    color: #B87C4C;
+    text-decoration: none;
+}
+
+.about-card a:hover {
+    text-decoration: underline;
+}
