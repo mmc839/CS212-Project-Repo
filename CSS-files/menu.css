@@ -1,0 +1,45 @@
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.section-title {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.menu-card {
+    background-color: #F7F1DE;
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.menu-card img {
+    height: 220px;
+    object-fit: cover;
+}
+
+.menu-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+}
+
+
+.card-title {
+    font-weight: 600;
+    color: #B87C4C;
+}
+
+.card-text {
+    color: #5a5a5a;
+}
+
+.price {
+    margin-top: 10px;
+    font-weight: 700;
+    color: #C4A484;
+    font-size: 1.1rem;
+}
