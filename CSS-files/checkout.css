@@ -1,0 +1,62 @@
+/* Checkout page styles using project palette:
+   Sage Green (#A8BBA3), Rust Brown (#B87C4C),
+   Tan (#C4A484), Cream (#F7F1DE) */
+
+.checkout-section {
+    background-color: #F7F1DE; /* cream */
+}
+
+.checkout-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+    font-weight: 600;
+    color: #C4A484; /* tan */
+}
+
+.checkout-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.4rem;
+    font-size: 0.95rem;
+}
+
+.checkout-item-name {
+    font-weight: 500;
+}
+
+.checkout-item-qty {
+    color: #5a5a5a;
+    margin-left: 0.4rem;
+    font-size: 0.9rem;
+}
+
+.checkout-item-price {
+    font-weight: 500;
+    color: #B87C4C; /* rust brown */
+}
+
+.place-order-btn {
+    background-color: #A8BBA3; /* sage green */
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 25px;
+    border: none;
+    padding: 0.8rem 1.2rem;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.place-order-btn:hover {
+    background-color: #8fa48c; /* slightly darker sage */
+    transform: translateY(-1px);
+}
+
+/* Small helper for empty-cart text */
+.empty-cart-text {
+    color: #5a5a5a;
+    font-style: italic;
+}
