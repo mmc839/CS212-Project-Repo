@@ -74,3 +74,30 @@ body {
 .about-card a:hover {
     text-decoration: underline;
 }
+
+/* Cart icon + count badge in navbar */
+.cart-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+}
+
+.cart-icon {
+    font-size: 1.1rem;
+}
+
+.cart-count-badge {
+    position: absolute;
+    top: 0;
+    right: -0.4rem;
+    background-color: #B87C4C;  /* warm brown from palette */
+    color: #F7F1DE;             /* cream */
+    border-radius: 999px;
+    padding: 0 0.35rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    min-width: 1.1rem;
+    text-align: center;
+    line-height: 1.1rem;
+}

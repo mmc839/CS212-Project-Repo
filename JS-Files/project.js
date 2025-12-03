@@ -1,129 +1,137 @@
-// Simple cart using localStorage
-// Items are stored as: [{ name, price, quantity }]
-
+// -------- Cart helpers --------
 function loadCart() {
-    return JSON.parse(localStorage.getItem("cart")) || [];
+    const data = localStorage.getItem('cart');
+    return data ? JSON.parse(data) : [];
 }
 
 function saveCart(cart) {
-    localStorage.setItem("cart", JSON.stringify(cart));
+    localStorage.setItem('cart', JSON.stringify(cart));
 }
 
-function addItemToCart(name, price) {
-    let cart = loadCart();
+function getCartItemCount() {
+    const cart = loadCart();
+    return cart.reduce((total, item) => {
+        const qty = item.quantity || 1;
+        return total + qty;
+    }, 0);
+}
 
-    // If item already in cart, increase quantity
+function updateCartCount() {
+    const count = getCartItemCount();
+    document.querySelectorAll('.cart-count').forEach(span => {
+        span.textContent = count;
+    });
+}
+
+// Add or increment an item in the cart
+function addItemToCart(name, price) {
+    const cart = loadCart();
     const existing = cart.find(item => item.name === name);
+
     if (existing) {
-        existing.quantity += 1;
+        existing.quantity = (existing.quantity || 1) + 1;
     } else {
         cart.push({ name, price, quantity: 1 });
     }
 
     saveCart(cart);
-    alert(`${name} was added to your cart.`);
+    updateCartCount();
+    alert(`${name} added to cart.`);
 }
 
-// Render cart items into checkout page if present
+// -------- Checkout page rendering --------
 function renderCheckout() {
-    const container = document.getElementById("checkout-items");
-    const totalEl = document.getElementById("checkout-total");
+    const container = document.getElementById('checkout-items');
+    const totalSpan = document.getElementById('checkout-total');
 
-    if (!container || !totalEl) return; // not on checkout page
+    // If we're not on the checkout page, just skip
+    if (!container || !totalSpan) return;
 
     const cart = loadCart();
-
-    container.innerHTML = "";
+    container.innerHTML = '';
 
     if (cart.length === 0) {
-        container.innerHTML = '<p class="empty-cart-text">Your cart is currently empty.</p>';
-        totalEl.textContent = "$0.00";
+        container.innerHTML = '<p class="text-muted">Your cart is currently empty.</p>';
+        totalSpan.textContent = '$0.00';
         return;
     }
+
+    const list = document.createElement('ul');
+    list.className = 'list-group mb-3';
 
     let total = 0;
 
     cart.forEach(item => {
-        const row = document.createElement("div");
-        row.classList.add("checkout-item-row");
+        const qty = item.quantity || 1;
+        const itemTotal = item.price * qty;
+        total += itemTotal;
 
-        const left = document.createElement("span");
-        left.classList.add("checkout-item-name");
-        left.textContent = item.name;
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex justify-content-between align-items-center';
 
-        const qty = document.createElement("span");
-        qty.classList.add("checkout-item-qty");
-        qty.textContent = `×${item.quantity}`;
-        left.appendChild(qty);
+        li.innerHTML = `
+            <div>
+                <strong>${item.name}</strong>
+                <small class="text-muted ms-2">x${qty}</small>
+            </div>
+            <span>$${itemTotal.toFixed(2)}</span>
+        `;
 
-        const right = document.createElement("span");
-        right.classList.add("checkout-item-price");
-        right.textContent = `$${(item.price * item.quantity).toFixed(2)}`;
-
-        row.appendChild(left);
-        row.appendChild(right);
-        container.appendChild(row);
-
-        total += item.price * item.quantity;
+        list.appendChild(li);
     });
 
-    totalEl.textContent = `$${total.toFixed(2)}`;
+    container.appendChild(list);
+    totalSpan.textContent = '$' + total.toFixed(2);
 }
 
-// Handle the fake checkout form
+// -------- Checkout form handling --------
 function setupCheckoutForm() {
-    const form = document.getElementById("checkout-form");
+    const form = document.getElementById('checkout-form');
     if (!form) return; // not on checkout page
 
-    form.addEventListener("submit", function (event) {
-        event.preventDefault();
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
 
-        const name = document.getElementById("cust-name").value.trim();
-        const email = document.getElementById("cust-email").value.trim();
-        const phone = document.getElementById("cust-phone").value.trim();
-        const pickup = document.getElementById("pickup-time").value;
+        const name = form.querySelector('#customer-name')?.value.trim();
+        const email = form.querySelector('#customer-email')?.value.trim();
+        const address = form.querySelector('#customer-address')?.value.trim();
 
-        const cart = loadCart();
-
-        if (cart.length === 0) {
-            alert("Your cart is empty. Please add items from the menu before checking out.");
+        if (!name || !email || !address) {
+            alert('Please fill out name, email, and address to place your (fake) order.');
             return;
         }
 
-        if (!name || !email || !phone || !pickup) {
-            alert("Please fill out all required fields.");
-            return;
-        }
+        alert('Thanks! Your fake order has been placed for the project demo.');
 
-        // Fake confirmation for the project
-        alert(
-            `Thank you, ${name}! Your order has been placed.\n` +
-            `Pickup time: ${pickup}\n\n` +
-            `A confirmation would be sent to: ${email} (for demo purposes only).`
-        );
-
-        // Clear cart and form
-        localStorage.removeItem("cart");
+        // Clear cart and UI
+        localStorage.removeItem('cart');
+        updateCartCount();
+        renderCheckout();
         form.reset();
-
-        // Optionally redirect back home or to menu
-        window.location.href = "../index.html";
     });
 }
 
-// Hook up everything once the DOM is ready
-document.addEventListener("DOMContentLoaded", function () {
-    // 1. Add-to-cart buttons on menu page
-    document.querySelectorAll("[data-add-to-cart]").forEach(button => {
-        button.addEventListener("click", function () {
+// -------- Attach events on page load --------
+document.addEventListener('DOMContentLoaded', function () {
+    // Hook up all add-to-cart buttons on the menu page
+    document.querySelectorAll('[data-add-to-cart]').forEach(button => {
+        button.addEventListener('click', function () {
             const name = this.dataset.name;
             const price = parseFloat(this.dataset.price);
-            if (!name || isNaN(price)) return;
+
+            if (!name || isNaN(price)) {
+                console.warn('Add-to-cart button missing data-name or data-price');
+                return;
+            }
+
             addItemToCart(name, price);
         });
     });
 
-    // 2. Checkout rendering + form on checkout page
+    // Sync badge with stored cart
+    updateCartCount();
+
+    // If we're on checkout.html, render and set up form
     renderCheckout();
     setupCheckoutForm();
 });
